@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "streamstats"
 version = "0.1.0"
-requires-python = ">= 3.10"
+requires-python = ">= 3.11"
 description = "Lab02: JSONL and CSV statistics utility"
 readme = "README.md"
 
