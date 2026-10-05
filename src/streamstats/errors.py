@@ -4,10 +4,10 @@ class StreamStatsError(Exception):
 class UnsupportedFormatError(StreamStatsError):
     pass
 
-class InvalidEventError(StreamStatsError):
+class UnknownLevelError(StreamStatsError):
     pass
 
-class IncorrectTimeStampError(StreamStatsError):
+class IncorrectTimestampError(StreamStatsError):
     pass
 
 class FileSyntaxError(StreamStatsError):
