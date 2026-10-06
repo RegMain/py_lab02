@@ -13,7 +13,7 @@ class Report:
     def __init__(self, results):
         self.results = results
 
-    def write_report(self):
+    def write(self):
         overall_result: AnalysisResult = self.results[0]
         json_report = dict()
         for result in self.results[1:]:
@@ -28,17 +28,17 @@ class Report:
         json_report["events_by_level"] = overall_result.events_by_level_counter
         print()
         print("AMOUNT OF EVENTS BY SOURCE")
-        for source, value in overall_result.items():
+        for source, value in overall_result.events_by_source_counter.items():
             print(f"\"{source}\": {value}")
         json_report["events_by_source"] = overall_result.events_by_source_counter
         print()
         print("TOP 5 HARMFUL EVENT SOURCES")
-        harmful_sources: list[tuple] = overall_result.harmful_events_by_source_counter.items()
-        harmful_sources.sort(lambda x: x[1], reverse=True)
+        harmful_sources: list[tuple] = list(overall_result.harmful_events_by_source_counter.items())
+        harmful_sources.sort(key=lambda x: x[1], reverse=True)
         json_report["top5_harmful_sources"] = []
-        for i in range(1, 6):
-            print(f"{i}. \"{harmful_sources[i - 1]}\"")
-            json_report["top5_harmful_sources"].append(harmful_sources[i - 1])
+        for i in range(1, min(len(harmful_sources) + 1, 6)):
+            print(f"{i}. \"{harmful_sources[i - 1][0]}\"")
+            json_report["top5_harmful_sources"].append(harmful_sources[i - 1][0])
         print()
         print(f"First timestamp: {overall_result.first_timestamp.isoformat()}")
         json_report["first_timestamp"] = overall_result.first_timestamp.isoformat()

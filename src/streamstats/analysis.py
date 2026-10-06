@@ -40,7 +40,6 @@ class Analyser:
             raise error(
                 f"{error_message} at line {line_number}.\n"
             )
-
     def analyse(self) -> AnalysisResult:
         level_counter: dict = dict()
         source_counter: dict = dict()
@@ -53,6 +52,9 @@ class Analyser:
         line_counter = 0
         while event is not None:
             line_counter += 1
+            if not event:
+                event = next(self.parser, None)
+                continue
             first_timestamp_t: dt.datetime
             last_timestamp_t: dt.datetime
             try:

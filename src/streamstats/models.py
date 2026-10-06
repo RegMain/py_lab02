@@ -9,6 +9,12 @@ class Event:
     source: str
     message: str
 
+    def __init__(self, timestamp: dt.datetime, level: str, source: str, message: str):
+        self.timestamp = timestamp
+        self.level = level
+        self.source = source
+        self.message = message
+
 class AnalysisResult:
     amount_of_events: int
     events_by_level_counter: dict
