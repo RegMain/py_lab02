@@ -2,13 +2,13 @@ import json
 import csv
 
 from streamstats.errors import FileSyntaxError
+from streamstats.models import TYPES_OF_FIELD
 
 class StreamStatsParser():
 
     file_name: str
     skip_invalid: bool
     encoding: str
-    TYPES_OF_FIELD: tuple[str] = ("timestamp", "level", "source", "message")
 
     def __init__(self, file_name: str, skip_invalid: bool = False, encoding: str = "UTF-8"):
         self.file_name = file_name
@@ -58,9 +58,9 @@ class CSVParser(StreamStatsParser):
                 line_counter += 1
                 if not line:
                     return dict()
-                if len(line) != len(self.TYPES_OF_FIELD):
+                if len(line) != len(TYPES_OF_FIELD):
                     self.process_error(FileSyntaxError, line_counter)
-                data: dict = dict(zip(self.TYPES_OF_FIELD, data))
+                data: dict = dict(zip(TYPES_OF_FIELD, data))
                 yield data
 
 

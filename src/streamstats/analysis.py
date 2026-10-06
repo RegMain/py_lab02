@@ -1,6 +1,7 @@
 from streamstats.models import (
     Event,
-    AnalysisResult
+    AnalysisResult,
+    TYPES_OF_LEVEL
 )
 
 from streamstats.parsers import (
@@ -19,7 +20,7 @@ class Analyser:
 
     parser: CSVParser | JSONLParser
     skip_invalid: bool
-    TYPES_OF_LEVEL: tuple[str] = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
+
 
     def __init__(self, parser: CSVParser | JSONLParser, skip_invalid: bool):
         self.parser = parser.parse_file()
@@ -40,13 +41,13 @@ class Analyser:
                 f"{error_message} at line {line_number}.\n"
             )
 
-    def analyse(self) -> dict:
+    def analyse(self) -> AnalysisResult:
         level_counter: dict = dict()
         source_counter: dict = dict()
         source_harmful_counter: dict = dict()
         first_timestamp = dt.datetime.max
         last_timestamp = dt.datetime.min
-        for level in self.TYPES_OF_LEVEL:
+        for level in TYPES_OF_LEVEL:
             level_counter[level] = 0
         event = next(self.parser, None)
         line_counter = 0
@@ -62,7 +63,7 @@ class Analyser:
                 self.process_error(self, IncorrectTimestampError, line_counter)
                 event = next(self.parser, None)
                 continue
-            if event["level"] not in self.TYPES_OF_LEVEL:
+            if event["level"] not in TYPES_OF_LEVEL:
                 self.process_error(UnknownLevelError, line_counter)
                 event = next(self.parser, None)
                 continue

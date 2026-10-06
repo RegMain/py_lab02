@@ -1,5 +1,8 @@
 import datetime as dt
 
+TYPES_OF_FIELD: tuple[str] = ("timestamp", "level", "source", "message")
+TYPES_OF_LEVEL: tuple[str] = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
+
 class Event:
     timestamp: dt.datetime
     level: str
@@ -26,4 +29,18 @@ class AnalysisResult:
         self.harmful_events_by_source_counter = harmful_events_by_source_counter
         self.first_timestamp = first_timestamp
         self.last_timestamp = last_timestamp
+
+    def add(self, result):
+        self.amount_of_events += result.amount_of_events
+        self.first_timestamp = min(self.first_timestamp, result.first_timestamp)
+        self.last_timestamp = max(self.last_timestamp, result.last_timestamp)
+        for level, result_value in result.events_by_level_counter.items():
+            self.events_by_level_counter[level] += result_value
+        for source, result_value in result.events_by_source_counter.items():
+            if source in result:
+                self.events_by_source_counter[source] += result_value
+                self.harmful_events_by_source_counter[source] += result.harmful_events_by_source_counter[source]
+            else:
+                self.events_by_source_counter[source] = result_value
+                self.harmful_events_by_source_counter[source] = result.harmful_events_by_source_counter[source]
 
