@@ -1,9 +1,7 @@
-from streamstats.models import (
-    AnalysisResult,
-    TYPES_OF_LEVEL
-)
-
 import json
+
+from streamstats.models import TYPES_OF_LEVEL, AnalysisResult
+
 
 class Report:
 
@@ -16,7 +14,7 @@ class Report:
 
     def write_json(self, file_name: str):
         overall_result: AnalysisResult = self.results[0]
-        json_report = dict()
+        json_report = {}
         for result in self.results[1:]:
             overall_result.add(result)
 
@@ -38,7 +36,6 @@ class Report:
 
     def write(self):
         overall_result: AnalysisResult = self.results[0]
-        json_report = dict()
         for result in self.results[1:]:
             overall_result.add(result)
         print("================STREAMSTATS================")
@@ -48,7 +45,7 @@ class Report:
             print(f"WARNING: {self.warnings_counter} event(s) was skipped. See ./warnings.log\n")
         else:
             print()
-        print(f"AMOUNT OF EVENTS BY LEVEL")
+        print("AMOUNT OF EVENTS BY LEVEL")
         for level in TYPES_OF_LEVEL:
             print(f"{level}: {overall_result.events_by_level_counter[level]}")
         print()
@@ -64,6 +61,4 @@ class Report:
         print()
         print(f"First timestamp: {overall_result.first_timestamp.isoformat()}")
         print(f"Last timestamp: {overall_result.last_timestamp.isoformat()}")
-        print(f"-- End of report")
-        with open("report.json", "w") as report_file:
-            json.dump(json_report, report_file, indent=4)
+        print("-- End of report")

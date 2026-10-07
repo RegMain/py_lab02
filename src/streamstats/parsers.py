@@ -1,15 +1,12 @@
-import json
 import csv
 import datetime as dt
+import json
 
-from streamstats.errors import (
-    FileSyntaxError,
-    IncorrectTimestampError,
-    WrongEventError
-)
+from streamstats.errors import FileSyntaxError, IncorrectTimestampError, WrongEventError
 from streamstats.models import TYPES_OF_FIELD, TYPES_OF_LEVEL, Event
 
-class StreamStatsParser():
+
+class StreamStatsParser:
 
     file_name: str
     skip_invalid: bool
@@ -55,14 +52,14 @@ class JSONLParser(StreamStatsParser):
 
     def parse_line(self, line: str, line_number: int) -> dict:
         if not line.strip():
-            return dict()
+            return {}
         try:
             return json.loads(line)
         except json.JSONDecodeError:
             self.process_error(FileSyntaxError, line_number)
-            return dict()
+            return {}
 
-    def parse_file(self) -> dict:
+    def parse_file(self) -> Event:
         with open(self.file_name, mode="r", encoding=self.encoding) as file:
             line: str
             line_counter: int = 0
@@ -86,7 +83,7 @@ class JSONLParser(StreamStatsParser):
 
 class CSVParser(StreamStatsParser):
 
-    def parse_file(self) -> dict:
+    def parse_file(self) -> Event:
         with open(self.file_name, mode="r", encoding=self.encoding) as file:
             sniffer = csv.Sniffer()
             has_header = sniffer.has_header(sample=file.read(1024))

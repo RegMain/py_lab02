@@ -1,22 +1,16 @@
 import argparse
 import sys
 
-from streamstats.parsers import (
-    StreamStatsParser,
-    JSONLParser,
-    CSVParser
-)
 from streamstats.analysis import Analyser
-from streamstats.report import Report
-from streamstats.errors import (
-    StreamStatsError,
-    UnsupportedFormatError
-)
+from streamstats.errors import StreamStatsError, UnsupportedFormatError
 from streamstats.models import AnalysisResult
+from streamstats.parsers import CSVParser, JSONLParser, StreamStatsParser
+from streamstats.report import Report
+
 
 def main():
     argument_parser = argparse.ArgumentParser(
-        prog="streamstats", description="StreamStats: CLI Analyser of logs"
+        prog="streamstats", description="StreamStats: CLI JSONL and CSV statistics utility"
     )
     argument_subparsers = argument_parser.add_subparsers(dest="command", required=True)
     main_parser = argument_subparsers.add_parser(
@@ -37,8 +31,8 @@ def main():
             file_parser: StreamStatsParser
             if args.skip_invalid:
                 # Clearing the warning log
-                tmp_file = open("warnings.log", "w")
-                tmp_file.close()
+                with open("warnings.log", "w"):
+                    pass
             match args.format:
                 case "csv":
                     file_parser = CSVParser(file_name, args.skip_invalid, args.encoding)

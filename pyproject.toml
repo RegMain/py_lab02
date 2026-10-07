@@ -8,9 +8,10 @@ version = "0.1.0"
 requires-python = ">= 3.11"
 description = "Lab02: JSONL and CSV statistics utility"
 readme = "README.md"
-
-[project.optional-dependencies]
-dev = ["pytest"]
+dependencies = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.10",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

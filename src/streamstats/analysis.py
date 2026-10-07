@@ -1,14 +1,8 @@
-from streamstats.models import (
-    Event,
-    AnalysisResult,
-    TYPES_OF_LEVEL
-)
-
-from streamstats.parsers import (
-    StreamStatsParser
-)
-
 import datetime as dt
+
+from streamstats.models import TYPES_OF_LEVEL, AnalysisResult, Event
+from streamstats.parsers import StreamStatsParser
+
 
 class Analyser:
 
@@ -18,11 +12,11 @@ class Analyser:
         self.parser = parser.parse_file()
 
     def analyse(self) -> AnalysisResult:
-        level_counter: dict = dict()
-        source_counter: dict = dict()
-        source_harmful_counter: dict = dict()
-        first_timestamp = dt.datetime.max
-        last_timestamp = dt.datetime.min
+        level_counter: dict = {}
+        source_counter: dict = {}
+        source_harmful_counter: dict = {}
+        first_timestamp = dt.datetime.max.replace(tzinfo=dt.UTC)
+        last_timestamp = dt.datetime.min.replace(tzinfo=dt.UTC)
         for level in TYPES_OF_LEVEL:
             level_counter[level] = 0
         event: Event = next(self.parser, None)
