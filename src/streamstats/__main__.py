@@ -32,6 +32,7 @@ def main():
     args = main_parser.parse_args()
     try:
         result: list[AnalysisResult] = []
+        warnings_counter = 0
         for file_name in args.input:
             file_parser: StreamStatsParser
             if args.skip_invalid:
@@ -49,7 +50,8 @@ def main():
                     )
             file_analyser = Analyser(file_parser)
             result.append(file_analyser.analyse())
-        report = Report(result, file_parser.warnings_counter)
+            warnings_counter += file_parser.warnings_counter
+        report = Report(result, warnings_counter)
         report.write()
         if args.output:
             report.write_json(args.output)
