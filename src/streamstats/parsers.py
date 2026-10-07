@@ -54,7 +54,7 @@ class StreamStatsParser():
 class JSONLParser(StreamStatsParser):
 
     def parse_line(self, line: str, line_number: int) -> dict:
-        if not line:
+        if not line.strip():
             return dict()
         try:
             return json.loads(line)
@@ -69,6 +69,8 @@ class JSONLParser(StreamStatsParser):
             while (line := file.readline()) != "":
                 line_counter += 1
                 data: dict = self.parse_line(line, line_counter)
+                if len(data) == 0:
+                    continue
                 if tuple(data.keys()) != TYPES_OF_FIELD:
                     self.process_error(FileSyntaxError, line_counter)
                     continue

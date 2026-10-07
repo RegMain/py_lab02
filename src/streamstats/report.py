@@ -3,7 +3,6 @@ from streamstats.models import (
     TYPES_OF_LEVEL
 )
 
-import datetime as dt
 import json
 
 class Report:
