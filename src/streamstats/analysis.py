@@ -5,17 +5,16 @@ from streamstats.models import (
 )
 
 from streamstats.parsers import (
-    CSVParser,
-    JSONLParser
+    StreamStatsParser
 )
 
 import datetime as dt
 
 class Analyser:
 
-    parser: CSVParser | JSONLParser
+    parser: StreamStatsParser
 
-    def __init__(self, parser: CSVParser | JSONLParser):
+    def __init__(self, parser: StreamStatsParser):
         self.parser = parser.parse_file()
 
     def analyse(self) -> AnalysisResult:
