@@ -73,6 +73,8 @@ class JSONLParser(StreamStatsParser):
                     continue
                 try:
                     data["timestamp"] = dt.datetime.fromisoformat(data["timestamp"])
+                    if data["timestamp"].tzinfo is None:
+                        data["timestamp"] = data["timestamp"].replace(tzinfo=dt.UTC)
                 except ValueError:
                     self.process_error(IncorrectTimestampError, line_counter)
                     continue
@@ -97,6 +99,8 @@ class CSVParser(StreamStatsParser):
                     continue
                 try:
                     line["timestamp"] = dt.datetime.fromisoformat(line["timestamp"])
+                    if line["timestamp"].tzinfo is None:
+                        line["timestamp"]= line["timestamp"].replace(tzinfo=dt.UTC)
                 except ValueError:
                     self.process_error(IncorrectTimestampError, line_counter)
                     continue

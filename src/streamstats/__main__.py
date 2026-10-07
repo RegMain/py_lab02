@@ -2,7 +2,11 @@ import argparse
 import sys
 
 from streamstats.analysis import Analyser
-from streamstats.errors import StreamStatsError, UnsupportedFormatError
+from streamstats.errors import (
+    ConfigurationError,
+    StreamStatsError,
+    UnsupportedFormatError,
+)
 from streamstats.models import AnalysisResult
 from streamstats.parsers import CSVParser, JSONLParser, StreamStatsParser
 from streamstats.report import Report
@@ -43,7 +47,16 @@ def main():
                         f"Format \"{args.format}\" is unsupported.\n"
                     )
             file_analyser = Analyser(file_parser)
-            result.append(file_analyser.analyse())
+            try:
+                result.append(file_analyser.analyse())
+            except FileNotFoundError:
+                raise ConfigurationError(
+                    f"File \"{file_name}\" is not found.\n"
+                )
+            except LookupError:
+                raise ConfigurationError(
+                    f"Encoding \"{args.encoding}\" is unknown.\n"
+                )
             warnings_counter += file_parser.warnings_counter
         report = Report(result, warnings_counter)
         report.write()
