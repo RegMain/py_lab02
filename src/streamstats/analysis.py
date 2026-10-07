@@ -14,11 +14,9 @@ import datetime as dt
 class Analyser:
 
     parser: CSVParser | JSONLParser
-    skip_invalid: bool
 
-    def __init__(self, parser: CSVParser | JSONLParser, skip_invalid: bool):
+    def __init__(self, parser: CSVParser | JSONLParser):
         self.parser = parser.parse_file()
-        self.skip_invalid = skip_invalid
 
     def analyse(self) -> AnalysisResult:
         level_counter: dict = dict()

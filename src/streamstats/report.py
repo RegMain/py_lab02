@@ -9,9 +9,11 @@ import json
 class Report:
 
     results: list[AnalysisResult]
+    warnings_counter: int
 
-    def __init__(self, results):
+    def __init__(self, results: list[AnalysisResult], warnings_counter: int):
         self.results = results
+        self.warnings_counter = warnings_counter
 
     def write(self):
         overall_result: AnalysisResult = self.results[0]
@@ -20,7 +22,11 @@ class Report:
             overall_result.add(result)
         print("================STREAMSTATS================")
         print(f"-- Result for {len(self.results)} file(s)")
-        print(f"Amount of events: {overall_result.amount_of_events}\n")
+        print(f"Amount of events: {overall_result.amount_of_events}")
+        if self.warnings_counter > 0:
+            print(f"WARNING: {self.warnings_counter} event(s) was skipped. See ./warnings.log\n")
+        else:
+            print()
         json_report["amount_of_events"] = overall_result.amount_of_events
         print(f"AMOUNT OF EVENTS BY LEVEL")
         for level in TYPES_OF_LEVEL:
