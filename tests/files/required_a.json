@@ -1,0 +1,7 @@
+{"timestamp": "2025-02-16", "level": "WARNING", "source": "Unknown", "message": "what?"}
+{"timestamp": "2025-02-16", "level": "CRITICAL", "source": "Aybolit", "message": "stop"}
+{"timestamp": "2025-02-17", "level": "DEBUG", "source": "Aybolit", "message": "stop"}
+{"timestamp": "2025-02-19", "level": "INFO", "source": "Aybolit", "message": "stop"}
+{"timestamp": "2025-02-12", "level": "CRITICAL", "source": "Aybolit", "message": ""}
+{"timestamp": "2025-02-11", "level": "INFO", "source": "Euler", "message": "stop"}
+{"timestamp": "2025-02-11", "level": "ERROR", "source": "Someone", "message": "stop"}

@@ -11,12 +11,14 @@ class StreamStatsParser:
     file_name: str
     skip_invalid: bool
     encoding: str
+    warnings_file: str
     warnings_counter: int = 0
 
-    def __init__(self, file_name: str, skip_invalid: bool = False, encoding: str = "UTF-8"):
+    def __init__(self, file_name: str, skip_invalid: bool = False, encoding: str = "UTF-8", warnings_file: str = "warnings.log"):
         self.file_name = file_name
         self.skip_invalid = skip_invalid
         self.encoding = encoding
+        self.warnings_file = warnings_file
 
     def process_error(self, error: type, line_number: int):
         error_message: str
@@ -30,10 +32,10 @@ class StreamStatsParser:
             error_message = "Unknown error"
         if not self.skip_invalid:
             raise error(
-                f"{error_message} at line {line_number}.\n"
+                f"{error_message} at line {line_number} in {self.file_name}.\n"
             )
         else:
-            with open("warnings.log", "a") as warnings_file:
+            with open(self.warnings_file, "a") as warnings_file:
                 if self.warnings_counter == 0:
                     warnings_file.write(f"\n-- File \"{self.file_name}\"\n")
                 warnings_file.write(f"WARNING: {error_message} at line {line_number}.\n")
@@ -68,7 +70,7 @@ class JSONLParser(StreamStatsParser):
                 data: dict = self.parse_line(line, line_counter)
                 if len(data) == 0:
                     continue
-                if tuple(data.keys()) != TYPES_OF_FIELD:
+                if sorted(tuple(data.keys())) != sorted(TYPES_OF_FIELD):
                     self.process_error(FileSyntaxError, line_counter)
                     continue
                 try:
@@ -88,7 +90,10 @@ class CSVParser(StreamStatsParser):
     def parse_file(self) -> Event:
         with open(self.file_name, mode="r", encoding=self.encoding) as file:
             sniffer = csv.Sniffer()
-            has_header = sniffer.has_header(sample=file.read(1024))
+            try:
+                has_header = sniffer.has_header(sample=file.read(1024))
+            except csv.Error:
+                has_header = False
             file.seek(0)
             reader = csv.DictReader(file, fieldnames=None if has_header else TYPES_OF_FIELD, delimiter=",")
             line_counter: int = 0

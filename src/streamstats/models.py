@@ -43,7 +43,7 @@ class AnalysisResult:
         for level, result_value in result.events_by_level_counter.items():
             self.events_by_level_counter[level] += result_value
         for source, result_value in result.events_by_source_counter.items():
-            if source in result:
+            if source in self.events_by_source_counter:
                 self.events_by_source_counter[source] += result_value
                 self.harmful_events_by_source_counter[source] += result.harmful_events_by_source_counter[source]
             else:

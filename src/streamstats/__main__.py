@@ -31,12 +31,12 @@ def main():
     try:
         result: list[AnalysisResult] = []
         warnings_counter = 0
+        if args.skip_invalid:
+            # Clearing the warning log
+            with open("warnings.log", "w"):
+                pass
         for file_name in args.input:
             file_parser: StreamStatsParser
-            if args.skip_invalid:
-                # Clearing the warning log
-                with open("warnings.log", "w"):
-                    pass
             match args.format:
                 case "csv":
                     file_parser = CSVParser(file_name, args.skip_invalid, args.encoding)
