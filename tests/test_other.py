@@ -2,6 +2,7 @@ import pytest
 from streamstats.errors import *
 from streamstats.parsers import CSVParser, JSONLParser
 from streamstats.analysis import Analyser
+from streamstats.report import Report
 
 """
 Negative tests
@@ -31,15 +32,30 @@ def test_file_syntax_error_csv():
         analyser = Analyser(parser)
         analyser.analyse()
 
+def test_unknown_encoding():
+    pass
+
 """
 Positive tests
 """
 
 def test_csv_with_header():
-    pass
+    parser = CSVParser("")
+    analyser = Analyser(parser)
+    report = Report([analyser.analyse()], 0)
+    result = {
+
+    }
+    assert report == result
 
 def test_csv_without_header():
-    pass
+    parser = CSVParser("")
+    analyser = Analyser(parser)
+    report = Report([analyser.analyse()], 0)
+    result = {
+
+    }
+    assert report == result
 
 def test_jsonl():
     pass
@@ -51,4 +67,7 @@ def test_parser_jsonl():
     pass
 
 def test_parser_csv():
+    pass
+
+def test_some_encoding():
     pass
