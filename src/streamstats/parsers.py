@@ -71,7 +71,7 @@ class JSONLParser(StreamStatsParser):
                 if len(data) == 0:
                     continue
                 if sorted(tuple(data.keys())) != sorted(TYPES_OF_FIELD):
-                    self.process_error(FileSyntaxError, line_counter)
+                    self.process_error(WrongEventError, line_counter)
                     continue
                 try:
                     data["timestamp"] = dt.datetime.fromisoformat(data["timestamp"])
@@ -89,10 +89,13 @@ class CSVParser(StreamStatsParser):
 
     def parse_file(self) -> Event:
         with open(self.file_name, mode="r", encoding=self.encoding) as file:
-            sniffer = csv.Sniffer()
-            try:
-                has_header = sniffer.has_header(sample=file.read(1024))
-            except csv.Error:
+            if file.read(1024).count("\n") > 1:
+                sniffer = csv.Sniffer()
+                try:
+                    has_header = sniffer.has_header(sample=file.read(1024))
+                except csv.Error:
+                    has_header = False
+            else:
                 has_header = False
             file.seek(0)
             reader = csv.DictReader(file, fieldnames=None if has_header else TYPES_OF_FIELD, delimiter=",")
