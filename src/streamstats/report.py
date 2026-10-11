@@ -1,5 +1,6 @@
 import datetime as dt
 import json
+import csv
 
 from streamstats.models import TYPES_OF_LEVEL, AnalysisResult
 
@@ -64,7 +65,19 @@ class Report:
         return is_empty
 
     def write_csv(self, file_name: str):
-        pass
+        with open(file_name, "w") as report_file:
+            csv_report = csv.writer(report_file, delimiter=",")
+            csv_report.writerow(["parameter", "value"])
+            csv_report.writerow(["amount of files", self.amount_of_files])
+            csv_report.writerow(["amount of events", self.amount_of_events])
+            csv_report.writerow(["amount of skipped", self.amount_of_skipped])
+            csv_report.writerow(["events by level",
+                *(map(lambda x: ": ".join(map(str, x)), self.events_by_level_counter.items()))])
+            csv_report.writerow(["events by source",
+                *(map(lambda x: ": ".join(map(str, x)), self.events_by_source_counter.items()))])
+            csv_report.writerow(["top harmful sources", *self.top_harmful_sources])
+            csv_report.writerow(["first timestamp", self.first_timestamp.isoformat()])
+            csv_report.writerow(["last timestamp", self.last_timestamp.isoformat()])
 
     def write_json(self, file_name: str):
         json_report = {}
