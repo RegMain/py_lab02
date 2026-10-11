@@ -9,11 +9,14 @@ class Event:
     source: str
     message: str
 
-    def __init__(self, timestamp: dt.datetime = dt.datetime.min.replace(tzinfo=dt.UTC),
+    def __init__(self, timestamp: dt.datetime | None = None,
             level: str = "NONE",
             source: str = "Unknown",
             message: str = ""):
-        self.timestamp = timestamp
+        if timestamp is None:
+            self.timestamp = dt.datetime.min.replace(tzinfo=dt.UTC)
+        else:
+            self.timestamp = timestamp
         self.level = level
         self.source = source
         self.message = message
@@ -35,17 +38,32 @@ class AnalysisResult:
     last_timestamp: dt.datetime
 
     def __init__(self, amount_of_events: int = 0,
-                 events_by_level_counter: dict = {},
-                 events_by_source_counter: dict = {},
-                 harmful_events_by_source_counter: dict = {},
-                 first_timestamp: dt.datetime = dt.datetime.min.replace(tzinfo=dt.UTC),
-                 last_timestamp: dt.datetime = dt.datetime.max.replace(tzinfo=dt.UTC)):
+                 events_by_level_counter: dict | None = None,
+                 events_by_source_counter: dict | None = None,
+                 harmful_events_by_source_counter: dict | None = None,
+                 first_timestamp: dt.datetime | None = None,
+                 last_timestamp: dt.datetime | None = None):
         self.amount_of_events = amount_of_events
-        self.events_by_level_counter = events_by_level_counter
-        self.events_by_source_counter = events_by_source_counter
-        self.harmful_events_by_source_counter = harmful_events_by_source_counter
-        self.first_timestamp = first_timestamp
-        self.last_timestamp = last_timestamp
+        if events_by_level_counter is None:
+            self.events_by_level_counter = {}
+        else:
+            self.events_by_level_counter = events_by_level_counter
+        if events_by_source_counter is None:
+            self.events_by_source_counter = {}
+        else:
+            self.events_by_source_counter = events_by_source_counter
+        if harmful_events_by_source_counter is None:
+            self.harmful_events_by_source_counter = {}
+        else:
+            self.harmful_events_by_source_counter = harmful_events_by_source_counter
+        if first_timestamp is None:
+            self.first_timestamp = dt.datetime.min.replace(tzinfo=dt.UTC)
+        else:
+            self.first_timestamp = first_timestamp
+        if last_timestamp is None:
+            self.last_timestamp = dt.datetime.max.replace(tzinfo=dt.UTC)
+        else:
+            self.last_timestamp = last_timestamp
 
     def __eq__(self, result):
         is_equal: bool = True

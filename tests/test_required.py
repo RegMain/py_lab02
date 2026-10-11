@@ -1,7 +1,8 @@
-from streamstats.analysis import Analyser
-from streamstats.parsers import JSONLParser, CSVParser
-from streamstats.report import Report
 import datetime as dt
+
+from streamstats.analysis import Analyser
+from streamstats.parsers import CSVParser, JSONLParser
+from streamstats.report import Report
 
 """
 Required tests
@@ -73,7 +74,7 @@ def test_cyrillic():
     analyser = Analyser(parser)
     report = Report([analyser.analyse()], parser.warnings_counter)
 
-    assert sorted(["Кто я", "Не знаю", "Мда"]) == sorted(list(report.events_by_source_counter.keys()))
+    assert sorted(["Кто я", "Не знаю", "Мда"]) == sorted(report.events_by_source_counter.keys())
 
 def test_line_7():
     with open("tests/warnings_d.log", "w"):

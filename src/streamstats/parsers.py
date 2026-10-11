@@ -74,7 +74,7 @@ class JSONLParser(StreamStatsParser):
                 data: dict = self.parse_line(line, line_counter)
                 if len(data) == 0:
                     continue
-                if sorted(tuple(data.keys())) != sorted(TYPES_OF_FIELD):
+                if sorted(data.keys()) != sorted(TYPES_OF_FIELD):
                     self.process_error(WrongEventError, line_counter)
                     continue
                 try:

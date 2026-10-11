@@ -1,7 +1,7 @@
+import datetime as dt
 import json
 
 from streamstats.models import TYPES_OF_LEVEL, AnalysisResult
-import datetime as dt
 
 
 class Report:
@@ -15,7 +15,9 @@ class Report:
     first_timestamp: dt.datetime | None
     last_timestamp: dt.datetime | None
 
-    def __init__(self, results: list[AnalysisResult] = [AnalysisResult()], warnings_counter: int = 0):
+    def __init__(self, results: list[AnalysisResult] | None = None, warnings_counter: int = 0):
+        if results is None:
+            results = [AnalysisResult()]
         self.amount_of_files = len(results)
         overall_result: AnalysisResult = results[0]
         for result in results[1:]:
