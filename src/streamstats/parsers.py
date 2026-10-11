@@ -7,6 +7,10 @@ from streamstats.models import TYPES_OF_FIELD, TYPES_OF_LEVEL, Event
 
 
 class StreamStatsParser:
+    """
+    Basic StreamStats parser, which contains
+    error handling and validation of events
+    """
 
     file_name: str
     skip_invalid: bool
@@ -19,6 +23,12 @@ class StreamStatsParser:
         self.warnings_file = warnings_file
 
     def process_error(self, error: type, line_number: int):
+        """
+        Error handling function. If --skip-invalid then it writes error to file,
+        else raises it
+        :param error: some StreamStatsError
+        :param line_number: line, where error has happened
+        """
         error_message: str
         if error == FileSyntaxError:
             error_message = "File syntax is wrong"
@@ -36,6 +46,7 @@ class StreamStatsParser:
             with open(self.warnings_file, "a") as warnings_file:
                 if self.warnings_counter == 0:
                     warnings_file.write(f"\n-- File \"{self.file_name}\"\n")
+                    # Header for each file
                 warnings_file.write(f"WARNING: {error_message} at line {line_number}.\n")
                 self.warnings_counter += 1
 
@@ -49,6 +60,10 @@ class StreamStatsParser:
         return True
 
 class JSONLParser(StreamStatsParser):
+    """
+    JSON Lines parser, which reads JSON Lines format
+    and generates Events from it
+    """
 
     encoding: str
 
@@ -57,6 +72,12 @@ class JSONLParser(StreamStatsParser):
         self.encoding = encoding
 
     def parse_line(self, line: str, line_number: int) -> dict:
+        """
+        Parses line, handles error if needed, returns in python format
+        :param line: the line itself
+        :param line_number: its' number
+        :return: dictionary with every key-value pair from json line
+        """
         if not line.strip():
             return {}
         try:
@@ -66,6 +87,10 @@ class JSONLParser(StreamStatsParser):
             return {}
 
     def parse_file(self) -> Event:
+        """
+        Generates events from given file and validates it
+        :return: Event
+        """
         with open(self.file_name, mode="r", encoding=self.encoding) as file:
             line: str
             line_counter: int = 0
@@ -94,6 +119,12 @@ class JSONLParser(StreamStatsParser):
                 yield event
 
 class CSVParser(StreamStatsParser):
+    """
+    CSV parser, which reads CSV format
+    and generates Events from it.
+
+    Delimiter is a comma.
+    """
 
     has_header: bool
 
@@ -102,7 +133,12 @@ class CSVParser(StreamStatsParser):
         self.has_header = has_header
 
     def parse_file(self) -> Event:
+        """
+        Generates event from given file and validates it
+        :return: Event
+        """
         with open(self.file_name, mode="r") as file:
+            # If has header then csv.DictReader uses first line as headers and keys for dictionary
             reader = csv.DictReader(file, fieldnames=None if self.has_header else TYPES_OF_FIELD, delimiter=",")
             line_counter: int = 0
             for line in reader:

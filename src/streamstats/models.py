@@ -4,6 +4,11 @@ TYPES_OF_FIELD: tuple[str] = ("timestamp", "level", "source", "message")
 TYPES_OF_LEVEL: tuple[str] = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
 
 class Event:
+    """
+    Type of event, which consists of every field
+    that is in TYPES_OF_FIELD. It can be changed
+    if needed
+    """
     timestamp: dt.datetime
     level: str
     source: str
@@ -30,6 +35,10 @@ class Event:
         return is_equal
 
 class AnalysisResult:
+    """
+    Type of result of analysis, which consists of neccessary
+    to report facts about file
+    """
     amount_of_events: int
     events_by_level_counter: dict
     events_by_source_counter: dict
@@ -76,12 +85,17 @@ class AnalysisResult:
         return is_equal
 
     def add(self, result):
+        """
+        Adds given result to this result
+        :param result: some AnalysisResult object
+        """
         self.amount_of_events += result.amount_of_events
         self.first_timestamp = min(self.first_timestamp, result.first_timestamp)
         self.last_timestamp = max(self.last_timestamp, result.last_timestamp)
         for level, result_value in result.events_by_level_counter.items():
             self.events_by_level_counter[level] += result_value
         for source, result_value in result.events_by_source_counter.items():
+            # Uniting the dictionaries
             if source in self.events_by_source_counter:
                 self.events_by_source_counter[source] += result_value
                 self.harmful_events_by_source_counter[source] += result.harmful_events_by_source_counter[source]

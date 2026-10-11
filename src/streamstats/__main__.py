@@ -28,8 +28,8 @@ def main():
     # CLI Arguments and Flags
     main_parser.add_argument("input", nargs="+", help="Names of files you need to analyse")
     main_parser.add_argument("--format", type=str, required=True, help="Format of your files")
-    main_parser.add_argument("--json_report", type=str, default="", help="Name of json report file")
-    main_parser.add_argument("--csv_report", type=str, default="", help="Name of csv report file")
+    main_parser.add_argument("--json-report", type=str, default="", help="Name of json report file")
+    main_parser.add_argument("--csv-report", type=str, default="", help="Name of csv report file")
     main_parser.add_argument("--encoding", type=str, default="UTF-8", help="Encoding of json file (csv is not supported)")
     main_parser.add_argument("--skip-invalid", action="store_true", help="Errors are writen in warnings.log if it's true, else error ends the program.")
     main_parser.add_argument("--header", action="store_true", help="If it's true then header is present in given csv files")

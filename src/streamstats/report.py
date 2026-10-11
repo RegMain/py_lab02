@@ -6,6 +6,10 @@ from streamstats.models import TYPES_OF_LEVEL, AnalysisResult
 
 
 class Report:
+    """
+    Class for report of work, writes pretty-looking result
+    in CLI and (optionally) csv and/or jsonl file
+    """
 
     amount_of_files: int
     amount_of_events: int
@@ -21,6 +25,7 @@ class Report:
             results = [AnalysisResult()]
         self.amount_of_files = len(results)
         overall_result: AnalysisResult = results[0]
+        # We sum up results of every file
         for result in results[1:]:
             overall_result.add(result)
         self.amount_of_events = overall_result.amount_of_events
@@ -30,11 +35,13 @@ class Report:
         harmful_sources: list[tuple] = list(overall_result.harmful_events_by_source_counter.items())
         harmful_sources.sort(key=lambda x: (x[1], x[0]), reverse=True)
         self.top_harmful_sources = []
+        # Organizing the top X, where x in 0..5 (you can easily change it)
         for i in range(1, min(len(harmful_sources) + 1, 6)):
             if harmful_sources[i - 1][1] > 0:
                 self.top_harmful_sources.append(harmful_sources[i - 1][0])
             else:
                 break
+        # If it's true then files are blank or totally wrong
         if overall_result.last_timestamp == dt.datetime.min.replace(tzinfo=dt.UTC):
             self.first_timestamp = None
             self.last_timestamp = None
@@ -55,6 +62,10 @@ class Report:
         return is_equal
 
     def is_empty(self):
+        """
+        Decides, if this Report is empty (no events were provided) or not.
+        :return: result of computing
+        """
         is_empty: bool = True
         is_empty = is_empty and self.amount_of_events == 0
         is_empty = is_empty and self.events_by_level_counter == dict(zip(TYPES_OF_LEVEL, [0 for _ in range(len(TYPES_OF_LEVEL))]))
@@ -65,6 +76,10 @@ class Report:
         return is_empty
 
     def write_csv(self, file_name: str):
+        """
+        Writes report in CSV format
+        :param file_name: output file name
+        """
         with open(file_name, "w") as report_file:
             csv_report = csv.writer(report_file, delimiter=",")
             csv_report.writerow(["parameter", "value"])
@@ -80,6 +95,10 @@ class Report:
             csv_report.writerow(["last timestamp", self.last_timestamp.isoformat()])
 
     def write_json(self, file_name: str):
+        """
+        Writes report in JSON Lines format
+        :param file_name: output file name
+        """
         json_report = {}
         json_report["amounts_of_files"] = self.amount_of_files
         json_report["amount_of_events"] = self.amount_of_events
@@ -97,6 +116,9 @@ class Report:
             json.dump(json_report, report_file, indent=4)
 
     def write(self):
+        """
+        Runs by default. Writes report in CLI
+        """
         print("================STREAMSTATS================")
         print(f"-- Result for {self.amount_of_files} file(s)")
         print(f"Amount of events: {self.amount_of_events}")
