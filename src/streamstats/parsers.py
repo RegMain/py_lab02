@@ -10,14 +10,12 @@ class StreamStatsParser:
 
     file_name: str
     skip_invalid: bool
-    encoding: str
     warnings_file: str
     warnings_counter: int = 0
 
-    def __init__(self, file_name: str, skip_invalid: bool = False, encoding: str = "UTF-8", warnings_file: str = "warnings.log"):
+    def __init__(self, file_name: str, skip_invalid: bool = False, warnings_file: str = "warnings.log"):
         self.file_name = file_name
         self.skip_invalid = skip_invalid
-        self.encoding = encoding
         self.warnings_file = warnings_file
 
     def process_error(self, error: type, line_number: int):
@@ -52,6 +50,12 @@ class StreamStatsParser:
 
 class JSONLParser(StreamStatsParser):
 
+    encoding: str
+
+    def __init__(self, file_name: str, skip_invalid: bool = False, warnings_file: str = "warnings.log", encoding = "UTF-8"):
+        super().__init__(file_name, skip_invalid, warnings_file)
+        self.encoding = encoding
+
     def parse_line(self, line: str, line_number: int) -> dict:
         if not line.strip():
             return {}
@@ -80,25 +84,26 @@ class JSONLParser(StreamStatsParser):
                 except ValueError:
                     self.process_error(IncorrectTimestampError, line_counter)
                     continue
-                event: Event = Event(*data.values())
+                event = Event()
+                event.timestamp = data["timestamp"]
+                event.level = data["level"]
+                event.source = data["source"]
+                event.message = data["message"]
                 if not self.check_event(event, line_counter):
                     continue
                 yield event
 
 class CSVParser(StreamStatsParser):
 
+    has_header: bool
+
+    def __init__(self, file_name: str, skip_invalid: bool = False, warnings_file: str = "warnings.log", has_header: bool = False):
+        super().__init__(file_name, skip_invalid, warnings_file)
+        self.has_header = has_header
+
     def parse_file(self) -> Event:
-        with open(self.file_name, mode="r", encoding=self.encoding) as file:
-            if file.read(1024).count("\n") > 1:
-                sniffer = csv.Sniffer()
-                try:
-                    has_header = sniffer.has_header(sample=file.read(1024))
-                except csv.Error:
-                    has_header = False
-            else:
-                has_header = False
-            file.seek(0)
-            reader = csv.DictReader(file, fieldnames=None if has_header else TYPES_OF_FIELD, delimiter=",")
+        with open(self.file_name, mode="r") as file:
+            reader = csv.DictReader(file, fieldnames=None if self.has_header else TYPES_OF_FIELD, delimiter=",")
             line_counter: int = 0
             for line in reader:
                 line_counter += 1
@@ -112,7 +117,11 @@ class CSVParser(StreamStatsParser):
                 except ValueError:
                     self.process_error(IncorrectTimestampError, line_counter)
                     continue
-                event: Event = Event(*line.values())
+                event = Event()
+                event.timestamp = line["timestamp"]
+                event.level = line["level"]
+                event.source = line["source"]
+                event.message = line["message"]
                 if not self.check_event(event, line_counter):
                     continue
                 yield event

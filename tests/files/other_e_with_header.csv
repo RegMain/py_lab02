@@ -1,0 +1,11 @@
+level,source,message,timestamp
+CRITICAL,something,message,2026-07-12
+DEBUG,other,message,2026-07-24
+CRITICAL,something,message,2026-07-15
+DEBUG,something,message,2026-07-17
+DEBUG,other,message,2026-07-19
+ERROR,other,message,2026-07-31
+ERROR,xyz,message,2026-07-11
+CRITICAL,something,message,2026-07-15
+CRITICAL,abc,message,2026-07-03
+INFO,qqq,message,2026-07-17

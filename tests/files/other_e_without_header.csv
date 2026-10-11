@@ -1,0 +1,10 @@
+2026-07-12,CRITICAL,something,message
+2026-07-24,DEBUG,other,message
+2026-07-15,CRITICAL,something,message
+2026-07-17,DEBUG,something,message
+2026-07-19,DEBUG,other,message
+2026-07-31,ERROR,other,message
+2026-07-11,ERROR,xyz,message
+2026-07-15,CRITICAL,something,message
+2026-07-03,CRITICAL,abc,message
+2026-07-17,INFO,qqq,message

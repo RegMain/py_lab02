@@ -15,7 +15,7 @@ class Report:
     first_timestamp: dt.datetime | None
     last_timestamp: dt.datetime | None
 
-    def __init__(self, results: list[AnalysisResult], warnings_counter: int):
+    def __init__(self, results: list[AnalysisResult] = [AnalysisResult()], warnings_counter: int = 0):
         self.amount_of_files = len(results)
         overall_result: AnalysisResult = results[0]
         for result in results[1:]:

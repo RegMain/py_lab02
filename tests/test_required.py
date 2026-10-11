@@ -41,7 +41,7 @@ def test_multiple_files():
         parser_1.warnings_counter + parser_2.warnings_counter
     )
 
-    result = Report
+    result = Report()
     result.amount_of_files = 2
     result.amount_of_events = 15
     result.amount_of_skipped = 0

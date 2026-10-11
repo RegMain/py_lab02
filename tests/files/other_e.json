@@ -1,0 +1,10 @@
+{"level": "CRITICAL", "message": "message", "source":  "something", "timestamp":  "2026-07-12"}
+{"level": "DEBUG", "message": "message", "source":  "other", "timestamp":  "2026-07-24"}
+{"level": "CRITICAL", "message": "message", "source":  "something", "timestamp":  "2026-07-15"}
+{"level": "DEBUG", "message": "message", "source":  "something", "timestamp":  "2026-07-17"}
+{"level": "DEBUG", "message": "message", "source":  "other", "timestamp":  "2026-07-19"}
+{"level": "ERROR", "message": "message", "source":  "other", "timestamp":  "2026-07-31"}
+{"level": "ERROR", "message": "message", "source":  "xyz", "timestamp":  "2026-07-11"}
+{"level": "CRITICAL", "message": "message", "source":  "something", "timestamp":  "2026-07-15"}
+{"level": "CRITICAL", "message": "message", "source":  "abc", "timestamp":  "2026-07-02T23:59:59-01:00"}
+{"level": "INFO", "message": "message", "source":  "qqq", "timestamp":  "2026-07-03"}

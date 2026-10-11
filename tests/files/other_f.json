@@ -1,0 +1,8 @@
+{"level": "DEBUG", "message": "message", "source":  "cc", "timestamp":  "2026-11-15"}
+{"level": "INFO", "message": "message", "source":  "a", "timestamp":  "2026-05-11"}
+{"level": "INFO", "message": "message", "source":  "b", "timestamp":  "2026-06-11"}
+{"level": "DEBUG", "message": "message", "timestamp":  "2026-07-12", "source":  "a"}
+{"level": "ERROR", "message": "message", "timestamp":  "2026-07-17", "source":  "B"}
+{"level": "WARNING", "message": "message", "timestamp":  "2026-07-11", "source":  "cc"}
+{"message": "message", "level": "CRITICAL", "timestamp":  "2026-07-17", "source":  "кириллица"}
+{"message": "message", "level": "INFO", "timestamp":  "2026-06-30", "source":  "22233"}
