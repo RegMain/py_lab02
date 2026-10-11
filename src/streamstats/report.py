@@ -1,6 +1,6 @@
+import csv
 import datetime as dt
 import json
-import csv
 
 from streamstats.models import TYPES_OF_LEVEL, AnalysisResult
 
@@ -87,9 +87,9 @@ class Report:
             csv_report.writerow(["amount of events", self.amount_of_events])
             csv_report.writerow(["amount of skipped", self.amount_of_skipped])
             csv_report.writerow(["events by level",
-                *(map(lambda x: ": ".join(map(str, x)), self.events_by_level_counter.items()))])
+                *(": ".join([str(i) for i in x] for x in self.events_by_level_counter.items()))])
             csv_report.writerow(["events by source",
-                *(map(lambda x: ": ".join(map(str, x)), self.events_by_source_counter.items()))])
+                *(": ".join([str(i) for i in x] for x in self.events_by_source_counter.items()))])
             csv_report.writerow(["top harmful sources", *self.top_harmful_sources])
             csv_report.writerow(["first timestamp", self.first_timestamp.isoformat()])
             csv_report.writerow(["last timestamp", self.last_timestamp.isoformat()])
