@@ -1,4 +1,8 @@
 import datetime as dt
+import sys
+import subprocess
+import json
+from pathlib import Path
 
 import pytest
 
@@ -200,3 +204,35 @@ def test_some_encoding():
     result.first_timestamp = dt.datetime.fromisoformat("2026-07-03").replace(tzinfo=dt.UTC)
     result.last_timestamp = dt.datetime.fromisoformat("2026-07-31").replace(tzinfo=dt.UTC)
     assert report == result
+
+def test_cli(tmp_path):
+    result = subprocess.run([sys.executable, "-m",
+        "streamstats", Path(__file__).resolve().parent / "files/required_a.json", "--format", "jsonl",
+        "--json-report", "a.json", "--csv-report", "a.csv"], cwd=tmp_path
+    )
+
+    assert (tmp_path / "a.json").exists()
+    assert (tmp_path / "a.csv").exists()
+    with open(tmp_path / "a.json", "r") as file:
+        result = json.load(file)
+        assert result == {
+            "amount_of_files": 1,
+            "amount_of_events": 7,
+            "amount_of_skipped": 0,
+            "events_by_level": {
+                "WARNING": 1,
+                "CRITICAL": 2,
+                "DEBUG": 1,
+                "INFO": 2,
+                "ERROR": 1
+            },
+            "events_by_source": {
+                "Aybolit": 4,
+                "Unknown": 1,
+                "Euler": 1,
+                "Someone": 1
+            },
+            "top_harmful_sources": ["Aybolit", "Someone"],
+            "first_timestamp": dt.datetime.fromisoformat("2025-02-11").replace(tzinfo=dt.UTC).isoformat(),
+            "last_timestamp": dt.datetime.fromisoformat("2025-02-19").replace(tzinfo=dt.UTC).isoformat()
+        }

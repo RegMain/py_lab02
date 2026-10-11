@@ -100,7 +100,7 @@ class Report:
         :param file_name: output file name
         """
         json_report = {}
-        json_report["amounts_of_files"] = self.amount_of_files
+        json_report["amount_of_files"] = self.amount_of_files
         json_report["amount_of_events"] = self.amount_of_events
         json_report["amount_of_skipped"] = self.amount_of_skipped
         json_report["events_by_level"] = self.events_by_level_counter
