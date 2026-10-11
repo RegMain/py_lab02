@@ -1,9 +1,11 @@
-import pytest
 import datetime as dt
-from streamstats.errors import *
-from streamstats.models import Event, AnalysisResult
-from streamstats.parsers import CSVParser, JSONLParser
+
+import pytest
+
 from streamstats.analysis import Analyser
+from streamstats.errors import *
+from streamstats.models import AnalysisResult, Event
+from streamstats.parsers import CSVParser, JSONLParser
 from streamstats.report import Report
 
 """

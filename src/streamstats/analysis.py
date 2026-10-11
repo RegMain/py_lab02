@@ -5,13 +5,20 @@ from streamstats.parsers import StreamStatsParser
 
 
 class Analyser:
-
+    """
+    Class for analysis of given file
+    """
     parser: StreamStatsParser
 
     def __init__(self, parser: StreamStatsParser):
         self.parser = parser.parse_file()
 
     def analyse(self) -> AnalysisResult:
+        """
+        Main function of class, uses generator from parser
+        to analyse every event of file
+        :return: Result in appropriate format for Report()
+        """
         level_counter: dict = {}
         source_counter: dict = {}
         source_harmful_counter: dict = {}
@@ -24,6 +31,7 @@ class Analyser:
         while event is not None:
             line_counter += 1
             if not event:
+                # Event is wrong
                 event = next(self.parser, None)
                 continue
             first_timestamp = min(first_timestamp, event.timestamp)
