@@ -30,7 +30,7 @@ def main():
     main_parser.add_argument("--format", type=str, required=True, help="Format of your files")
     main_parser.add_argument("--json-report", type=str, default="", help="Name of json report file")
     main_parser.add_argument("--csv-report", type=str, default="", help="Name of csv report file")
-    main_parser.add_argument("--encoding", type=str, default="UTF-8", help="Encoding of json file (csv is not supported)")
+    main_parser.add_argument("--encoding", type=str, default="UTF-8", help="Encoding of files. UTF-8 by default")
     main_parser.add_argument("--skip-invalid", action="store_true", help="Errors are writen in warnings.log if it's true, else error ends the program.")
     main_parser.add_argument("--header", action="store_true", help="If it's true then header is present in given csv files")
     args = main_parser.parse_args()
@@ -48,9 +48,9 @@ def main():
             file_parser: StreamStatsParser
             match args.format:
                 case "csv":
-                    file_parser = CSVParser(file_name, args.skip_invalid, has_header=args.header)
+                    file_parser = CSVParser(file_name, skip_invalid=args.skip_invalid, encoding=args.encoding, has_header=args.header)
                 case "jsonl":
-                    file_parser = JSONLParser(file_name, args.skip_invalid, encoding=args.encoding)
+                    file_parser = JSONLParser(file_name, skip_invalid=args.skip_invalid, encoding=args.encoding)
                 case _:
                     raise UnsupportedFormatError(
                         f"Format \"{args.format}\" is unsupported.\n"

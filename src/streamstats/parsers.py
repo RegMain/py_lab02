@@ -16,11 +16,13 @@ class StreamStatsParser:
     skip_invalid: bool
     warnings_file: str
     warnings_counter: int = 0
+    encoding: str
 
-    def __init__(self, file_name: str, skip_invalid: bool = False, warnings_file: str = "warnings.log"):
+    def __init__(self, file_name: str, skip_invalid: bool = False, warnings_file: str = "warnings.log", encoding: str = "UTF-8"):
         self.file_name = file_name
         self.skip_invalid = skip_invalid
         self.warnings_file = warnings_file
+        self.encoding = encoding
 
     def process_error(self, error: type, line_number: int):
         """
@@ -64,12 +66,6 @@ class JSONLParser(StreamStatsParser):
     JSON Lines parser, which reads JSON Lines format
     and generates Events from it
     """
-
-    encoding: str
-
-    def __init__(self, file_name: str, skip_invalid: bool = False, warnings_file: str = "warnings.log", encoding = "UTF-8"):
-        super().__init__(file_name, skip_invalid, warnings_file)
-        self.encoding = encoding
 
     def parse_line(self, line: str, line_number: int) -> dict:
         """
@@ -128,8 +124,9 @@ class CSVParser(StreamStatsParser):
 
     has_header: bool
 
-    def __init__(self, file_name: str, skip_invalid: bool = False, warnings_file: str = "warnings.log", has_header: bool = False):
-        super().__init__(file_name, skip_invalid, warnings_file)
+    def __init__(self, file_name: str, skip_invalid: bool = False,
+                 warnings_file: str = "warnings.log", encoding: str = "UTF-8", has_header: bool = False):
+        super().__init__(file_name, skip_invalid, warnings_file, encoding)
         self.has_header = has_header
 
     def parse_file(self) -> Event:
@@ -137,7 +134,7 @@ class CSVParser(StreamStatsParser):
         Generates event from given file and validates it
         :return: Event
         """
-        with open(self.file_name, mode="r") as file:
+        with open(self.file_name, mode="r", encoding=self.encoding) as file:
             # If has header then csv.DictReader uses first line as headers and keys for dictionary
             reader = csv.DictReader(file, fieldnames=None if self.has_header else TYPES_OF_FIELD, delimiter=",")
             line_counter: int = 0
