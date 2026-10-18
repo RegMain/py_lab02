@@ -27,12 +27,15 @@ class Event:
         self.message = message
 
     def __eq__(self, event):
-        is_equal: bool = True
-        is_equal = is_equal and self.timestamp == event.timestamp
-        is_equal = is_equal and self.level == event.level
-        is_equal = is_equal and self.source == event.source
-        is_equal = is_equal and self.message == event.message
-        return is_equal
+        if self.timestamp != event.timestamp:
+            return False
+        if self.level != event.level:
+            return False
+        if self.source != event.source:
+            return False
+        if self.message != event.message:
+            return False
+        return True
 
 class AnalysisResult:
     """
@@ -75,14 +78,19 @@ class AnalysisResult:
             self.last_timestamp = last_timestamp
 
     def __eq__(self, result):
-        is_equal: bool = True
-        is_equal = is_equal and self.amount_of_events == result.amount_of_events
-        is_equal = is_equal and self.events_by_level_counter == result.events_by_level_counter
-        is_equal = is_equal and self.events_by_source_counter == result.events_by_source_counter
-        is_equal = is_equal and self.harmful_events_by_source_counter == result.harmful_events_by_source_counter
-        is_equal = is_equal and self.first_timestamp == result.first_timestamp
-        is_equal = is_equal and self.last_timestamp == result.last_timestamp
-        return is_equal
+        if self.amount_of_events != result.amount_of_events:
+            return False
+        if self.events_by_level_counter != result.events_by_level_counter:
+            return False
+        if self.events_by_source_counter != result.events_by_source_counter:
+            return False
+        if self.harmful_events_by_source_counter != result.harmful_events_by_source_counter:
+            return False
+        if self.first_timestamp != result.first_timestamp:
+            return False
+        if self.last_timestamp != result.last_timestamp:
+            return False
+        return True
 
     def add(self, result):
         """

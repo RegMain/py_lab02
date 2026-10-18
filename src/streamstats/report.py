@@ -50,30 +50,42 @@ class Report:
             self.last_timestamp = overall_result.last_timestamp
 
     def __eq__(self, result):
-        is_equal: bool = True
-        is_equal = is_equal and self.amount_of_files == result.amount_of_files
-        is_equal = is_equal and self.amount_of_events == result.amount_of_events
-        is_equal = is_equal and self.amount_of_skipped == result.amount_of_skipped
-        is_equal = is_equal and self.events_by_level_counter == result.events_by_level_counter
-        is_equal = is_equal and self.events_by_source_counter == result.events_by_source_counter
-        is_equal = is_equal and self.top_harmful_sources == result.top_harmful_sources
-        is_equal = is_equal and self.first_timestamp == result.first_timestamp
-        is_equal = is_equal and self.last_timestamp == result.last_timestamp
-        return is_equal
+        if self.amount_of_files != result.amount_of_files:
+            return False
+        if self.amount_of_events != result.amount_of_events:
+            return False
+        if self.amount_of_skipped != result.amount_of_skipped:
+            return False
+        if self.events_by_level_counter != result.events_by_level_counter:
+            return False
+        if self.events_by_source_counter != result.events_by_source_counter:
+            return False
+        if self.top_harmful_sources != result.top_harmful_sources:
+            return False
+        if self.first_timestamp != result.first_timestamp:
+            return False
+        if self.last_timestamp != result.last_timestamp:
+            return False
+        return True
 
     def is_empty(self):
         """
         Decides, if this Report is empty (no events were provided) or not.
         :return: result of computing
         """
-        is_empty: bool = True
-        is_empty = is_empty and self.amount_of_events == 0
-        is_empty = is_empty and self.events_by_level_counter == dict(zip(TYPES_OF_LEVEL, [0 for _ in range(len(TYPES_OF_LEVEL))]))
-        is_empty = is_empty and self.events_by_source_counter == {}
-        is_empty = is_empty and self.top_harmful_sources == []
-        is_empty = is_empty and self.first_timestamp is None
-        is_empty = is_empty and self.last_timestamp is None
-        return is_empty
+        if self.amount_of_events != 0:
+            return False
+        if self.events_by_level_counter != dict(zip(TYPES_OF_LEVEL, [0 for _ in range(len(TYPES_OF_LEVEL))])):
+            return False
+        if self.events_by_source_counter != {}:
+            return False
+        if self.top_harmful_sources != []:
+            return False
+        if self.first_timestamp is not None:
+            return False
+        if self.last_timestamp is not None:
+            return False
+        return True
 
     def write_csv(self, file_name: str):
         """
